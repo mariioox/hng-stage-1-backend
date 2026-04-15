@@ -1,82 +1,96 @@
-HNG Stage 0: Gender Classification API
+HNG Stage 1: Identity & Classification API
 
-A professional, high-performance Node.js API that integrates with the Genderize.io external service to provide processed gender predictions based on name queries.
-
+A robust Node.js backend that aggregates data from multiple identity APIs, applies custom classification logic, and persists the results in a Supabase PostgreSQL database.
 🚀 Features
 
-    Data Transformation: Renames raw API fields to a more descriptive sample_size schema.
+    Parallel Data Fetching: Utilizes Promise.all to fetch from three external APIs simultaneously, maintaining a sub-500ms response time.
 
-    Confidence Logic: Implements a strict confidence check (probability≥0.7 and sample_size≥100).
+    Data Persistence: Stores unique profiles in Supabase to avoid redundant external API calls.
 
-    Strict Validation: Returns 400 or 422 errors for invalid inputs.
+    Idempotency: Automatically detects existing names and returns the stored record instead of creating duplicates.
 
-    CORS Enabled: Fully accessible for cross-origin grading scripts.
+    Advanced Filtering: Supports case-insensitive filtering by gender, country, and age group.
 
-    Speed: Optimized for sub-500ms processing (excluding external API latency).
+    Strict Error Handling: Implements precise 502 handling for upstream failures as per HNG requirements.
 
-🛠️ Technical Stack
+🛠️ Tech Stack
 
-    Runtime: Node.js (v18+)
+    Runtime: Node.js (ES Modules)
 
     Framework: Express.js
 
-    HTTP Client: Axios
+    Database: PostgreSQL (via Supabase)
 
-    Deployment: https://hng-stage-0-backend-jeffgenderize.vercel.app/
+    ID Standard: UUID v7
+
+    Deployment: Vercel
 
 📖 API Documentation
-1. Classify Name
 
-Returns gender prediction and confidence metrics for a given name.
+1. Create/Retrieve Profile
 
-Endpoint: GET /api/classify?name={name}
+Endpoint: POST /api/profiles
 
-Success Response (200 OK):
+Body: { "name": "ella" }
+Status Scenario Response
+201 New Profile Returns the full classified profile object.
+201 Existing Returns existing record with "message": "Profile already exists".
+400 Input Error Returned if name is missing or empty.
+502 API Failure Returned if Genderize, Agify, or Nationalize fail. 2. Get All Profiles
 
-    JSON
-     {
-       "status": "success",
-       "data": {
-         "name": "jeffery",
-         "gender": "male",
-         "probability": 1,
-         "sample_size": 38656,
-         "is_confident": true,
-         "processed_at": "2026-04-13T17:05:58.337Z"
-       }
-     }
- 
-Error Responses:
+Endpoint: GET /api/profiles
 
-    400 Bad Request: Name parameter is missing.
+Optional Query Params: gender, country_id, age_group (Case-insensitive)
 
-    422 Unprocessable Entity: Name is not a valid string.
+Example: /api/profiles?gender=male&country_id=NG 3. Get Single Profile
 
-    200 Error: Prediction not found (e.g., for fake/rare names).
+Endpoint: GET /api/profiles/:id
 
+Response: 200 OK with profile data, or 404 if not found. 4. Delete Profile
+
+Endpoint: DELETE /api/profiles/:id
+
+Response: 204 No Content on success, or 404 if not found.
 ⚙️ Local Setup
 
-    Clone the repository:
-    git clone https://github.com/mariioox/hng-stage-0-backend.git
-    cd hng-stage-0-backend
+1
+Clone & Install
+Get the code ready
+Bash
 
-    Install dependencies:
-    npm install
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+npm install
 
-    Start the server:
-    npm start
+2
+Configure Environment
+Setup your secrets
 
-    The server will be live at http://localhost:3000.
+Create a .env file in the root directory:
+env
 
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_anon_key
+PORT=3000
 
-🧪 Testing
+3
+Database Setup
+Prepare the schema
 
-You can test the endpoint using curl:
+Run the SQL schema provided in the /database folder (or the SQL snippet from the task instructions) in your Supabase SQL editor.
+4
+Start the Server
+Launch locally
+Bash
 
-curl "http://localhost:3000/api/classify?name=john"
+npm run dev
+
+🗺️ Classification Rules
+
+    Age Groups: Child (0–12), Teenager (13–19), Adult (20–59), Senior (60+).
+
+    Nationality: Selected based on the highest probability returned by the Nationalize API.
 
 📝 License
 
 This project is licensed under the MIT License.
-
-    Note to Reviewers: The processed_at timestamp is generated dynamically in ISO 8601 format for every request. All edge cases (gender: null, count: 0) are handled as per the stage requirements.
