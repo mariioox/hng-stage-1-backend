@@ -50,7 +50,7 @@ app.post("/api/profiles", async (req, res) => {
       .from("profiles")
       .select("*")
       .eq("name", cleanName)
-      .single();
+      .maybeSingle();
 
     if (existingProfile) {
       return res.status(201).json({
@@ -120,13 +120,12 @@ app.post("/api/profiles", async (req, res) => {
 
     return res.status(201).json({ status: "success", data });
   } catch (err) {
+    console.error("DEBUG ERROR:", err);
     if (err.status === 502) {
-      return res
-        .status(502)
-        .json({
-          status: "error",
-          message: `${err.api} returned an invalid response`,
-        });
+      return res.status(502).json({
+        status: "error",
+        message: `${err.api} returned an invalid response`,
+      });
     }
     return res
       .status(500)
