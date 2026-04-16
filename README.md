@@ -64,9 +64,9 @@ Endpoint: GET /api/profiles/:id
 1. Clone & Install
 Get the code ready
 
-    git clone https://github.com/mariioox/hng-stage-1-backend
-    cd hng-stage-1-backend
-    npm install
+        git clone https://github.com/mariioox/hng-stage-1-backend
+        cd hng-stage-1-backend
+        npm install
 
 2. Configure Environment
 Setup your secrets
