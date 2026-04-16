@@ -8,17 +8,15 @@ import { v7 as uuidv7, validate as isUuid } from "uuid";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 1. Initialize Supabase
+// Initialize Supabase
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY,
 );
 
-// 2. Middleware
 app.use(cors());
 app.use(express.json());
 
-// 3. Helper Functions
 const getAgeGroup = (age) => {
   if (age <= 12) return "child";
   if (age <= 19) return "teenager";
@@ -28,7 +26,7 @@ const getAgeGroup = (age) => {
 
 /**
  * POST /api/profiles
- * Creates a new profile or returns an existing one (Idempotency)
+ * Creates a new profile or returns an existing one
  */
 app.post("/api/profiles", async (req, res) => {
   const { name } = req.body;

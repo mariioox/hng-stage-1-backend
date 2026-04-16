@@ -15,7 +15,7 @@ A robust Node.js backend that aggregates data from multiple identity APIs, appli
 
 🛠️ Tech Stack
 
-    Runtime: Node.js (ES Modules)
+    Runtime: Node.js
 
     Framework: Express.js
 
@@ -36,13 +36,17 @@ Status Scenario Response
 201 New Profile Returns the full classified profile object.
 201 Existing Returns existing record with "message": "Profile already exists".
 400 Input Error Returned if name is missing or empty.
-502 API Failure Returned if Genderize, Agify, or Nationalize fail. 2. Get All Profiles
+502 API Failure Returned if Genderize, Agify, or Nationalize fail.
+
+2. Get All Profiles
 
 Endpoint: GET /api/profiles
 
-Optional Query Params: gender, country_id, age_group (Case-insensitive)
+Optional Query Params: gender, country_id, age_group
 
-Example: /api/profiles?gender=male&country_id=NG 3. Get Single Profile
+Example: /api/profiles?gender=male&country_id=NG
+
+3. Get Single Profile
 
 Endpoint: GET /api/profiles/:id
 
@@ -51,12 +55,12 @@ Response: 200 OK with profile data, or 404 if not found. 4. Delete Profile
 Endpoint: DELETE /api/profiles/:id
 
 Response: 204 No Content on success, or 404 if not found.
+
 ⚙️ Local Setup
 
 1
 Clone & Install
 Get the code ready
-Bash
 
 git clone https://github.com/your-username/your-repo-name.git
 cd your-repo-name
@@ -67,7 +71,6 @@ Configure Environment
 Setup your secrets
 
 Create a .env file in the root directory:
-env
 
 SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_anon_key
@@ -78,10 +81,10 @@ Database Setup
 Prepare the schema
 
 Run the SQL schema provided in the /database folder (or the SQL snippet from the task instructions) in your Supabase SQL editor.
+
 4
 Start the Server
 Launch locally
-Bash
 
 npm run dev
 
