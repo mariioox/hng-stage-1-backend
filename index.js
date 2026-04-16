@@ -205,7 +205,7 @@ app.delete("/api/profiles/:id", async (req, res) => {
       .from("profiles")
       .select("id")
       .eq("id", id)
-      .single();
+      .maybeSingle();
     if (!existing)
       return res
         .status(404)
